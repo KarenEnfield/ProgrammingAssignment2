@@ -1,23 +1,3 @@
-## Put comments here that give an overall description of what your
-## functions do
-
-## Write a short comment describing this function
-
-## makeCacheMatrix creates a special matrix that can cache its inverse
-makeCacheMatrix <- function(x = matrix()) {
-  m <- NULL
-  set <- function(y) {
-    x <<- y
-    m <<- NULL
-  }
-  get <- function() x
-  setinverse <- function(inverse) m <<- inverse
-  getinverse <- function() m
-  list(set = set, get = get,
-       setinverse = setinverse,
-       getinverse = getinverse)
-}
-
 
 ## Homework assignment R Programming, Week 3, Programming assignment 2
 ## Course 2 of 10 in Data Science specialization
@@ -38,7 +18,7 @@ makeCacheMatrix <- function(x = matrix()) {
 
 ## makeCacheMatrix creates a special matrix that can cache its inverse
 makeCacheMatrix <- function(x = matrix()) {
-  m <- NULL
+  m <- NULL # set internal matrix cache to NULL
   set <- function(y) {
     x <<- y
     m <<- NULL
@@ -59,13 +39,16 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
   ## Return a matrix that is the inverse of 'x'
-  m <- x$getinverse()
-  if(!is.null(m)) {
-    # no need to recompute
+  m <- x$getinverse() # Does the cached inverse matrix already exist?
+  if(!is.null(m)) { #it exists
+    # no need to recompute.  Indicate that it is cached
     message("getting cached data")
     return(m)
   }
+  # get the original matrix
   data <- x$get()
+  
+  ## Compute the inverse.
   ## Computing the inverse of a square matrix can be done with the 
   ## solve function in R. For example, if X is a square invertible matrix,
   ## then solve(X) returns its inverse.
@@ -74,7 +57,9 @@ cacheSolve <- function(x, ...) {
   ## a singularity matrix are used (ie matrix(1:9,3,3) will NOT work
   ## for solve, as this is a singuarity or singular matrix)
   
-  m <- solve(data)
+  m <- solve(data,...)
+  ## update the cache
   x$setinverse(m)
+  ## return the new inversed matrix
   m
 }
